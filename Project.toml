@@ -10,6 +10,7 @@ Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MajorizationExtrema = "42adfb1e-7d51-11e9-2954-1f97c1ef8590"
 Polyhedra = "67491407-f73d-577b-9b50-8179a7c68029"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 

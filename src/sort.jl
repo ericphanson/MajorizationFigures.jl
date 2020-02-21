@@ -19,7 +19,7 @@ end
 
 function sort_ordered(p::Polyhedron; kwargs...)
     isempty(p) && return p
-    q = polyhedron(vrep(sort.(points(vrep(p)); kwargs...)))
+    q = polyhedron(vrep(sort.(points(vrep(p)); kwargs...)), library(p))
     hrep(q)
     q
 end
