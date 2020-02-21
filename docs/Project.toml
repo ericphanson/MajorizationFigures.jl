@@ -1,2 +1,7 @@
 [deps]
+CDDLib = "3391f64e-dcde-5f30-b752-e11513730f60"
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+MajorizationExtrema = "42adfb1e-7d51-11e9-2954-1f97c1ef8590"
+MajorizationFigures = "c27bb10a-d343-4c89-ac67-34093075c38a"
+Polyhedra = "67491407-f73d-577b-9b50-8179a7c68029"
