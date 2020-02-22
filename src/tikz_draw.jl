@@ -8,7 +8,7 @@ struct Colored{V, T}
     color_name::String
 end
 
-colored_simplex() = Colored(Simplex(), SIMPLEX_COLOR, "simplex_color")
+colored_simplex() = Colored(Simplex(), SIMPLEX_COLOR, "SIMPLEX_COLOR")
 
 function print_tex(io::IO, v::AbstractVector)
     print(io, "(")
@@ -45,20 +45,14 @@ function print_tex(io::IO, c::Tuple{String, Colors.Colorant})
     print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
 end
 
-function add_color(preamble_io::IO, c::Colored)
-    print_tex(preamble_io, (c.color_name, c.color))
-end
-
-function draw(io::IO, preamble_io::IO, c::Colored{<:AbstractVector{<:Rational}})
-    add_color(preamble_io, c.color)
-    print(io,"\\draw[fill=$(c.color_name)]")
-    print_tex(io, c.object)
+function draw(io::IO, preamble_io::IO, v::AbstractVector{<:Rational}, color_name)
+    print(io,"\\draw[fill=$color_name]")
+    print_tex(io, v)
     print(io, "circle(\\rad cm);\n")
 end
 
 
-function draw(io::IO, preamble_io::IO, c::Colored{Simplex})
-    add_color(preamble_io, c)
+function draw(io::IO, preamble_io::IO, ::Simplex, color_name)
     print(io, """
     \\def\\laxis{1.2}
     \\def\\ltriangle{1}
@@ -70,16 +64,14 @@ function draw(io::IO, preamble_io::IO, c::Colored{Simplex})
     \\draw [->] (0,0,0) -- (0,0,\\laxis) node [left] {\$z\$};
 
     % simplex
-    \\filldraw [opacity=.8, $(c.color_name)] (\\ltriangle,0,0) -- (0,\\ltriangle,0)
+    \\filldraw [opacity=.8, $color_name] (\\ltriangle,0,0) -- (0,\\ltriangle,0)
     -- (0,0,\\ltriangle) -- cycle;
     """)
 end
 
-function draw(io::IO, preamble_io::IO, c::Colored{<:Polyhedron})
-    p = c.object
-    add_color(preamble_io, c)
+function draw(io::IO, preamble_io::IO, p::Polyhedron, color_name)
     isempty(p) && return
-    print(io, "\\filldraw [opacity=.33, $(c.color_name)]\n")
+    print(io, "\\filldraw [opacity=.33, $color_name]\n")
     ps = planar_contour(p)
     d = length(ps)
     print_tex(io, ps[1])
@@ -92,6 +84,13 @@ function draw(io::IO, preamble_io::IO, c::Colored{<:Polyhedron})
     print(io, ";\n")
 end
 
+function draw_colored(io::IO, preamble_io::IO, c::Colored)
+    if c.color isa Colors.Colorant
+        print_tex(preamble_io, (c.color_name, c.color))
+    end
+    draw(io, preamble_io, c.object, c.color_name)
+end
+
 function figure(args::Colored...; scale = 4)
     io = IOBuffer()
     preamble_io = IOBuffer()
@@ -101,10 +100,10 @@ function figure(args::Colored...; scale = 4)
     \tdplotsetmaincoords{70}{130}
     """)
 
-    draw(io, preamble_io, colored_simplex())
+    draw_colored(io, preamble_io, colored_simplex())
 
     for arg in args
-        draw(io, preamble_io, arg)
+        draw_colored(io, preamble_io, arg)
     end
     str = String(take!(io))
     preamble = String(take!(preamble_io))
@@ -114,27 +113,27 @@ function figure(args::Colored...; scale = 4)
     preamble=preamble)
 end
 
-function figure(args...; kwargs...)
-    n = length(args)
+function add_colors(items)
+    n = length(items)
     cs = Colors.distinguishable_colors(n+1, SIMPLEX_COLOR)
     popfirst!(cs) # remove SIMPLEX_COLOR
-    colored_args = ( Colored(args[i], cs[i], "c$i") for i = eachindex(args) )
+    return ( Colored(items[i], cs[i], "c$i") for i = eachindex(items) )
+end
+
+function figure(args...; kwargs...)
+    colored_args = add_colors(args)
     figure(colored_args...; kwargs...)
 end
-#
-#
-# function draw(io::IO, preamble_io::IO, colors, Ps::Vector{<:Polyhedron})
-#     Ps = filter(!isempty, Ps)
-#     n = length(Ps)
-#
-#     cs = Colors.distinguishable_colors(n+1, SIMPLEX_COLOR)
-#     popfirst!(cs) # remove SIMPLEX_COLOR
-#     for (i,c) in enumerate(cs)
-#         print_tex(preamble_io, ("c$i", c))
-#         println(preamble_io)
+
+# function add_colors_grouped(groups)
+#     indices = UnitRange{Int64}[]
+#     flat = []
+#     counter = 1
+#     for g in groups
+#         append!(flat, g)
+#         push!(indices, counter:(counter += length(g)-1))
+#         counter += 1
 #     end
-#
-#     for (i, P) in enumerate(Ps)
-#         draw(io, preamble_io, P, "c$i")
-#     end
+#     colored_flat = collect(add_colors(flat))
+#     colored_groups = [ colored_flat[I] for I in indices ]
 # end
