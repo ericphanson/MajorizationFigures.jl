@@ -6,7 +6,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://ericphanson.github.io/MajorizationFigures.jl/dev)
 
 Generate publication-quality pictures of points and polyhedra in the probability
-simplex in ℝ³ via tikz, by using Polyhedra.jl and TikzPictures.jl. This package
+simplex in ℝ³ via Tikz, by using Polyhedra.jl and TikzPictures.jl. This package
 is mostly aimed at generating figures for my thesis.
 
 There are a couple interesting polytopes in the probability simplex:
