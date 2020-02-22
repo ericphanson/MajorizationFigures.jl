@@ -1,7 +1,7 @@
 using MajorizationFigures, Polyhedra
-using MajorizationFigures: E
-using MajorizationExtrema
-using Combinatorics
+using MajorizationFigures: subsimplex
+using MajorizationExtrema: majmin
+using Combinatorics: permutations
 using TikzPictures
 
 macro save(name)
@@ -9,23 +9,20 @@ macro save(name)
     quote
         path = joinpath(@__DIR__, "figs", $name_str)
         save(PDF(path), $name)
+        save(SVG(path), $name)
     end
 end
 
 q = [21 // 100, 24 // 100, 55 // 100]
 ϵ = 1 // 10
 Bq = TV_Ball(q, ϵ)
-Es = E.(permutations(1:3))
+Es = subsimplex.(permutations(1:3))
 q_majmin = majmin(q, ϵ)
 
-q_colored = Colored(q, nothing, "black")
-q_majmin_colored = Colored(q_majmin, nothing, "white")
-Bq_colored = Colored(Bq, nothing, "opacity=.33,blue")
-Es_colored = collect(MajorizationFigures.add_colors(Es))
-
-function copy_colors(to, from)
-    Colored(to, from.color, from.color_name)
-end
+q_colored = ColoredObject(q, nothing, "black")
+q_majmin_colored = ColoredObject(q_majmin, nothing, "white")
+Bq_colored = ColoredObject(Bq, nothing, "opacity=.33,blue")
+Es_colored = add_colors(Es)
 
 Bq_pieces = [Bq ∩ s for s in Es]
 Bq_pieces_colored = copy_colors.(Bq_pieces, Es_colored)
@@ -38,7 +35,6 @@ fig1_Es = figure(Es_colored...; scale = SCALE)
 
 fig2_sorted = figure(Es_colored[1]; scale = SCALE)
 @save fig2_sorted
-
 
 fig3_qball = figure(q_colored, Bq_colored; scale = SCALE)
 @save fig3_qball
@@ -60,14 +56,3 @@ fig7_qball_pieces_majmin = figure(Bq_pieces_colored..., q_colored, q_majmin_colo
 
 nonempty_inds = findall(i -> !isempty(Bq_pieces[i]), eachindex(Bq_pieces))
 collect(permutations(1:3))[nonempty_inds]
-# polys = Polyhedron[]
-# push!(polys, E((1, 2, 3)))
-# append!(polys, )
-# append!(polys, [Bq ∩ s for s in Es])
-# figure(q, polys)
-#
-# figure(q, majmin(q, ϵ), polys)
-#
-# figure(q, sort(majmin(q, ϵ); rev = true), polys)
-#
-# figure(q)

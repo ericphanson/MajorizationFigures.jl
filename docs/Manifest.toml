@@ -190,7 +190,7 @@ uuid = "42adfb1e-7d51-11e9-2954-1f97c1ef8590"
 version = "0.4.1"
 
 [[MajorizationFigures]]
-deps = ["CDDLib", "Colors", "Combinatorics", "LinearAlgebra", "MajorizationExtrema", "Polyhedra", "Random", "TikzPictures"]
+deps = ["CDDLib", "Colors", "Combinatorics", "LinearAlgebra", "MajorizationExtrema", "Polyhedra", "Printf", "Random", "TikzPictures"]
 path = ".."
 uuid = "c27bb10a-d343-4c89-ac67-34093075c38a"
 version = "0.1.0"

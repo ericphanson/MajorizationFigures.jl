@@ -1,11 +1,11 @@
 """
-    E(perm) -> Polyedron
+    subsimplex(perm) -> Polyhedron
 
 Returns the polyhedron consisting of the subset of the probability
 simplex that is sorted according to the permutation `perm`, in the
-sense that for `q ∈ E(perm)`, `issorted(q[perm]; rev=true) == true`.
+sense that for `q ∈ subsimplex(perm)`, `issorted(q[perm]; rev=true) == true`.
 """
-function E(perm)
+function subsimplex(perm)
     d = length(perm)
     region = permpoly([i == 1 for i = 1:d]) # the probability simplex
     for i = 1:d-1
@@ -17,21 +17,23 @@ function E(perm)
 end
 
 
-function sort_ordered(p::Polyhedron; kwargs...)
+function sort_ordered(p::Polyhedron; rev = true)
     isempty(p) && return p
-    q = polyhedron(vrep(sort.(points(vrep(p)); kwargs...)), library(p))
+    q = polyhedron(vrep(sort.(points(vrep(p)); rev = true)), library(p))
     hrep(q)
     q
 end
 
 """
-    Base.sort(p::Polyhedron; kwargs...) -> Vector{Polyhedron}
+    sortpoly(p::Polyhedron; rev = true) -> Vector{Polyhedron}
 
 Returns a collection of polyhedra whose union gives the set equal
-to sorting each element in `p` elementwise.
+to sorting each element in `p` elementwise. Defaults to sorting
+from most to least (set `rev = false` to match the default
+behavior of `Base.sort`).
 """
-function Base.sort(p::Polyhedron; kwargs...)
+function sortpoly(p::Polyhedron; rev = true)
     d = fulldim(p)
-    Es = E.(permutations(1:d))
-    [sort_ordered(p ∩ s; kwargs...) for s in Es]
+    subsimplices = subsimplex.(permutations(1:d))
+    [sort_ordered(p ∩ s; rev = true) for s in subsimplices]
 end
