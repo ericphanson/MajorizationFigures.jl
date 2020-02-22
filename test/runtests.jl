@@ -1,6 +1,6 @@
 using Combinatorics
 using MajorizationFigures
-using MajorizationFigures: E
+using MajorizationFigures: subsimplex
 using Polyhedra
 using Test
 
@@ -14,15 +14,15 @@ using Test
     end
 end
 
-@testset "E" begin
+@testset "subsimplex" begin
     d = 3
     for π in permutations(1:d)
-        current_E = E(π)
+        current_subsimplex = subsimplex(π)
 
-        q = rand(current_E)
+        q = rand(current_subsimplex)
         @test issorted(q[π]; rev = true)
 
-        for q in points(vrep(current_E))
+        for q in points(vrep(current_subsimplex))
             @test issorted(q[π]; rev = true)
         end
     end
