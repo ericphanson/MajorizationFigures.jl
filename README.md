@@ -2,7 +2,6 @@
 
 [![Build Status](https://github.com/ericphanson/MajorizationFigures.jl/workflows/CI/badge.svg)](https://github.com/ericphanson/MajorizationFigures.jl/actions)
 [![Coverage](https://codecov.io/gh/ericphanson/MajorizationFigures.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ericphanson/MajorizationFigures.jl)
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://ericphanson.github.io/MajorizationFigures.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://ericphanson.github.io/MajorizationFigures.jl/dev)
 
 Generate publication-quality pictures of points and polyhedra in the probability
@@ -11,9 +10,9 @@ is mostly aimed at generating figures for my thesis.
 
 There are a couple interesting polytopes in the probability simplex:
 
-* The total variation distance ball around a probability vector The
-* infinity-norm ball around a probability vector The set of probability vectors
-* majorized by a given probability vector
+* The total variation distance ball around a probability vector
+* The infinity-norm ball around a probability vector
+* The set of probability vectors majorized by a given probability vector
 
 This package depends on the unregistered package `MajorizationExtrema`.
 
