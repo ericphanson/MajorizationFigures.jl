@@ -16,7 +16,7 @@ TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 
 [compat]
 CDDLib = "0.6"
-Colors = "0.11"
+Colors = "0.11, 0.12"
 Combinatorics = "1"
 MajorizationExtrema = "0.4"
 Polyhedra = "0.6"
